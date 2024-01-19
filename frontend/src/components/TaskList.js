@@ -51,6 +51,15 @@ const TaskList = () => {
         }
     };
 
+    const deleteTask = async (id) => {
+        try {
+            await axios.delete(`${URL}/api/tasks/${id}`);
+            getTasks();
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
     return (
         <div>
             <h2>task manager</h2>
@@ -77,8 +86,15 @@ const TaskList = () => {
                 <p className="--py">no tasks currently</p>
             ) : (
                 <>
-                    {tasks.map((task) => {
-                        return <Task />;
+                    {tasks.map((task, index) => {
+                        return (
+                            <Task
+                                key={task._id}
+                                task={task}
+                                index={index}
+                                deleteTask={deleteTask}
+                            />
+                        );
                     })}
                 </>
             )}
