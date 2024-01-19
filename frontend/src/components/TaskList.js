@@ -14,6 +14,8 @@ const TaskList = () => {
         name: "",
         completed: false,
     });
+    const [isEditing, setIsEditing] = useState(false);
+    const [taskID, setTaskID] = useState("");
 
     const { name } = formData;
     const handleInputChange = (e) => {
@@ -60,6 +62,25 @@ const TaskList = () => {
         }
     };
 
+    const getSingleTask = async (task) => {
+        setFormData({ name: task.name, completed: false });
+        setTaskID(task._id);
+        setIsEditing(true);
+    };
+
+    const updateTask = async (e) => {
+        e.preventDefault();
+        if (name === "") return toast.error("enter a task there!");
+        try {
+            await axios.patch(`${URL}/api/tasks/${taskID}`, formData);
+            setFormData({ ...formData, name: "" });
+            setIsEditing(false);
+            getTasks();
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
     return (
         <div>
             <h2>task manager</h2>
@@ -67,6 +88,8 @@ const TaskList = () => {
                 name={name}
                 handleInputChange={handleInputChange}
                 createTask={createTask}
+                isEditing={isEditing}
+                updateTask={updateTask}
             />
             <div className="--flex-between --pb">
                 <p>
@@ -93,6 +116,7 @@ const TaskList = () => {
                                 task={task}
                                 index={index}
                                 deleteTask={deleteTask}
+                                getSingleTask={getSingleTask}
                             />
                         );
                     })}

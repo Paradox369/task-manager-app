@@ -1,8 +1,16 @@
 import React from "react";
 
-const TaskForm = ({ createTask, name, handleInputChange }) => {
+const TaskForm = ({
+    createTask,
+    name,
+    handleInputChange,
+    isEditing,
+    updateTask,
+}) => {
     return (
-        <form onSubmit={createTask} className="task-form">
+        <form
+            onSubmit={isEditing ? updateTask : createTask}
+            className="task-form">
             <input
                 type="text"
                 placeholder="add task"
@@ -10,7 +18,7 @@ const TaskForm = ({ createTask, name, handleInputChange }) => {
                 value={name}
                 onChange={handleInputChange}
             />
-            <button type="submit">add</button>
+            <button type="submit">{isEditing ? "edit" : "add"}</button>
         </form>
     );
 };
